@@ -53,6 +53,7 @@ public:
 private:
   double m_magnitude_zero_point;
   bool m_use_symmetry;
+  std::string m_checkimage;
 
   std::vector<std::pair<std::string, unsigned>> m_petrosian_names;
   std::vector<unsigned> m_images;

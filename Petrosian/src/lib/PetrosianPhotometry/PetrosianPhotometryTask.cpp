@@ -32,17 +32,20 @@
 #include <SEFramework/Aperture/TransformedAperture.h>
 
 #include <SEImplementation/Measurement/MultithreadedMeasurement.h>
+#include <SEImplementation/Property/SourceId.h>
 #include <SEImplementation/Plugin/MeasurementFrame/MeasurementFrame.h>
 #include <SEImplementation/Plugin/MeasurementFramePixelCentroid/MeasurementFramePixelCentroid.h>
 #include <SEImplementation/Plugin/ShapeParameters/ShapeParameters.h>
 #include <SEImplementation/Plugin/Jacobian/Jacobian.h>
+#include <SEImplementation/CheckImages/CheckImages.h>
 
 
 namespace Petrosian {
 
-PetrosianPhotometryTask::PetrosianPhotometryTask(unsigned instance, double mag_zeropoint, bool use_symmetry)
-  : m_instance(instance), m_mag_zeropoint(mag_zeropoint), m_use_symmetry(use_symmetry) {
-
+PetrosianPhotometryTask::PetrosianPhotometryTask(unsigned instance, double mag_zeropoint, bool use_symmetry,
+                                                 const std::string& checkimage)
+  : m_instance(instance), m_mag_zeropoint(mag_zeropoint), m_use_symmetry(use_symmetry),
+    m_checkimage(checkimage) {
 }
 
 void PetrosianPhotometryTask::computeProperties(SourceXtractor::SourceInterface& source) const {
@@ -92,9 +95,15 @@ void PetrosianPhotometryTask::computeProperties(SourceXtractor::SourceInterface&
   // set the source properties
   source.setIndexedProperty<PetrosianPhotometry>(
     m_instance, measurement.m_flux, flux_error, mag, mag_error, measurement.m_flags);
+
+  // Write to the check image
+  if (!m_checkimage.empty()) {
+    auto img = SourceXtractor::CheckImages::getInstance().getWriteableCheckImage(
+      m_checkimage + std::to_string(m_instance), measurement_image->getWidth(), measurement_image->getHeight()
+    );
+    auto source_id = source.getProperty<SourceXtractor::SourceId>().getSourceId();
+    SourceXtractor::fillAperture(ell_aper, centroid_x, centroid_y, img, static_cast<float>(source_id));
+  }
 }
 
 }  // namespace Petrosian
-
-
-

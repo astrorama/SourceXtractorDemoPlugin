@@ -42,7 +42,7 @@ public:
    */
   virtual ~PetrosianPhotometryTask() = default;
 
-  PetrosianPhotometryTask(unsigned m_instance, double mag_zeropoint, bool use_symmetry);
+  PetrosianPhotometryTask(unsigned m_instance, double mag_zeropoint, bool use_symmetry, const std::string &checkimage);
 
   void computeProperties(SourceXtractor::SourceInterface& source) const override;
 
@@ -50,6 +50,7 @@ private:
   unsigned m_instance;
   double m_mag_zeropoint;
   bool m_use_symmetry;
+  std::string m_checkimage;
 };  // End of PetrosianPhotometryTask class
 
 }  // namespace Petrosian

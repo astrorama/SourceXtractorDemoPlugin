@@ -31,6 +31,7 @@ namespace Petrosian {
 static const char PETROSIAN_ETA[]{"petrosian-eta"};
 static const char PETROSIAN_FACTOR[]{"pretrosian-factor"};
 static const char PETROSIAN_MINRAD[]{"petrosian-minimum-radius"};
+static const char PETROSIAN_CHECKIMAGE[]{"check-image-petrosian"};
 
 PetrosianConfig::PetrosianConfig(long manager_id) : Configuration(manager_id) {}
 
@@ -49,6 +50,10 @@ std::map<std::string, Configuration::OptionDescriptionList> PetrosianConfig::get
                 PETROSIAN_MINRAD, po::value<double>()->default_value(3.5),
                 "Minimum radius for Petrosian photometry"
               },
+              {
+                PETROSIAN_CHECKIMAGE, po::value<std::string>(),
+                  "Check image for Petrosian apertures"
+              }
             }
           }};
 }
@@ -57,6 +62,9 @@ void PetrosianConfig::initialize(const UserValues& args) {
   m_eta = args.at(PETROSIAN_ETA).as<double>();
   m_factor = args.at(PETROSIAN_FACTOR).as<double>();
   m_minrad = args.at(PETROSIAN_MINRAD).as<double>();
+  if (args.count(PETROSIAN_CHECKIMAGE)) {
+    m_checkimage = args.at(PETROSIAN_CHECKIMAGE).as<std::string>();
+  }
 }
 
 double PetrosianConfig::getEta() const {
@@ -69,6 +77,10 @@ double PetrosianConfig::getFactor() const {
 
 double PetrosianConfig::getMinRadius() const {
   return m_minrad;
+}
+
+std::string PetrosianConfig::getCheckImagePath() const {
+  return m_checkimage;
 }
 
 } // namespace Petrosian

@@ -21,6 +21,7 @@
  *
  */
 
+#include "Petrosian/PetrosianConfig.h"
 #include "Petrosian/PetrosianPhotometry/PetrosianPhotometry.h"
 #include "Petrosian/PetrosianPhotometry/PetrosianPhotometryTask.h"
 #include "Petrosian/PetrosianPhotometry/PetrosianPhotometryTaskFactory.h"
@@ -37,7 +38,10 @@ namespace Petrosian {
 std::shared_ptr<SourceXtractor::Task>
 PetrosianPhotometryTaskFactory::createTask(const SourceXtractor::PropertyId& property_id) const {
   if (property_id.getTypeId() == typeid(PetrosianPhotometry)) {
-    return std::make_shared<PetrosianPhotometryTask>(property_id.getIndex(), m_magnitude_zero_point, m_use_symmetry);
+    return std::make_shared<PetrosianPhotometryTask>(
+      property_id.getIndex(), m_magnitude_zero_point, m_use_symmetry,
+      m_checkimage
+    );
   }
   else if (property_id.getTypeId() == typeid(PetrosianPhotometryArray)) {
     return std::make_shared<PetrosianPhotometryArrayTask>(m_images);
@@ -46,6 +50,7 @@ PetrosianPhotometryTaskFactory::createTask(const SourceXtractor::PropertyId& pro
 }
 
 void PetrosianPhotometryTaskFactory::reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const {
+  manager.registerConfiguration<PetrosianConfig>();
   manager.registerConfiguration<SourceXtractor::MagnitudeConfig>();
   manager.registerConfiguration<SourceXtractor::MeasurementImageConfig>();
   manager.registerConfiguration<SourceXtractor::WeightImageConfig>();
@@ -54,6 +59,7 @@ void PetrosianPhotometryTaskFactory::reportConfigDependencies(Euclid::Configurat
 void PetrosianPhotometryTaskFactory::configure(Euclid::Configuration::ConfigManager& manager) {
   m_magnitude_zero_point = manager.getConfiguration<SourceXtractor::MagnitudeConfig>().getMagnitudeZeroPoint();
   m_use_symmetry = manager.getConfiguration<SourceXtractor::WeightImageConfig>().symmetryUsage();
+  m_checkimage = manager.getConfiguration<PetrosianConfig>().getCheckImagePath();
 
   const auto& measurement_config = manager.getConfiguration<SourceXtractor::MeasurementImageConfig>();
   const auto& image_infos = measurement_config.getImageInfos();

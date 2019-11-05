@@ -45,8 +45,11 @@ public:
 
   double getMinRadius() const;
 
+  std::string getCheckImagePath() const;
+
 private:
   double m_eta, m_factor, m_minrad;
+  std::string m_checkimage;
 };
 
 } // namespace Petrosian
