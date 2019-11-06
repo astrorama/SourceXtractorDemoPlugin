@@ -21,35 +21,84 @@
  *
  */
 
-#ifndef _PLUGIN_PETROSIANCONFIG_H
-#define _PLUGIN_PETROSIANCONFIG_H
+#ifndef _PETROSIAN_PETROSIANCONFIG_H
+#define _PETROSIAN_PETROSIANCONFIG_H
 
 #include <Configuration/Configuration.h>
+#include <boost/filesystem/path.hpp>
 
 namespace Petrosian {
 
+/**
+ * @class PetrosianConfig
+ * @details
+ *  This class handles the configuration of the Petrosian tasks. If you have
+ *  multiple tasks that do conceptually different things, you may want to have
+ *  separated configurations too.
+ *
+ *  The configuration procedure has three steps: pre-initialization, initialization and post-initialization.
+ *  We only implement the initialization step here. For more details, look at the documentation of
+ *  Euclid::Configuration::Configuration
+ *
+ * @see
+ *  https://sextractor.readthedocs.io/en/latest/Photom.html#petrosian-aperture-flux-flux-petro
+ */
 class PetrosianConfig : public Euclid::Configuration::Configuration {
 public:
 
+  /**
+   * Constructor
+   * @param manager_id
+   *    An identifier of the configuration manager that is creating the object.
+   *    Just needed to be passed to Configuration
+   */
   PetrosianConfig(long manager_id);
 
+  /**
+   * Default destructor
+   */
   ~PetrosianConfig() = default;
 
+  /**
+   * @brief
+   *    Lets the Manager know which options are handled by this class
+   * @return
+   *    A map, where the key is used to group sets of options, and the value is
+   *    a vector of boost program option
+   */
   std::map<std::string, OptionDescriptionList> getProgramOptions() override;
 
+  /**
+   * @brief
+   *    This is the main configuration method: the processing of the expected options is to be done here
+   * @param args
+   *    The user parameters
+   */
   void initialize(const UserValues& args) override;
 
+  /**
+   * Getter for the η parameter.
+   */
   double getEta() const;
 
+  /**
+   * Getter for the Petrosian factor \f$N_{\rm P}\f$
+   */
   double getFactor() const;
 
+  /**
+   * Getter for the minimum radius
+   */
   double getMinRadius() const;
 
-  std::string getCheckImagePath() const;
+  /**
+   * Getter for the configured check image
+   */
+  boost::filesystem::path getCheckImagePath() const;
 
 private:
   double m_eta, m_factor, m_minrad;
-  std::string m_checkimage;
+  boost::filesystem::path m_checkimage;
 };
 
 } // namespace Petrosian

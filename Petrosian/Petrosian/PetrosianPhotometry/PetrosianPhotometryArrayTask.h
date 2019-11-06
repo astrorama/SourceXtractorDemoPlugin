@@ -31,19 +31,39 @@ namespace Petrosian {
 /**
  * @class PetrosianPhotometryArrayTask
  * @brief
- *
+ *  This class groups the photometries measured on different images into a
+ *  single property. This avoids having one column per measurement frame.
+ * @details
+ *  It inherits from SourceXtractor::SourceTask because it is a per-source property.
+ *  For measurements that work on source groups - like the Model Fitting does -,
+ *  it would have to inherit from SourceXtractor::GroupTask
+ * @see
+ *  SourceXtractor::GroupTask
  */
 class PetrosianPhotometryArrayTask: public SourceXtractor::SourceTask {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianPhotometryArrayTask() = default;
 
+  /**
+   * Constructor
+   * @param images
+   *    List of frame IDs. To be used to retrieve the individual photometries.
+   */
   PetrosianPhotometryArrayTask(const std::vector<unsigned> &images);
 
+  /**
+   * @brief
+   *    Compute the corresponding property. Multiple properties could be computed at once.
+   * @param source
+   *    The source for which to compute the property. If this were an implementation of
+   *    SourceXtractor::GroupTask, it would receive an instance of
+   *    SourceXtractor::SourceGroupInterface instead
+   */
   void computeProperties(SourceXtractor::SourceInterface& source) const override;
 
 private:

@@ -32,14 +32,15 @@ namespace Petrosian {
 /**
  * @class PetrosianPhotometryArray
  * @brief
- *
+ *  This class holds all the photometries, measured in different frames,
+ *  for a given source.
  */
 class PetrosianPhotometryArray: public SourceXtractor::Property {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianPhotometryArray() = default;
 

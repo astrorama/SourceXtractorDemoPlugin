@@ -36,32 +36,40 @@ static const char PETROSIAN_CHECKIMAGE[]{"check-image-petrosian"};
 PetrosianConfig::PetrosianConfig(long manager_id) : Configuration(manager_id) {}
 
 std::map<std::string, Configuration::OptionDescriptionList> PetrosianConfig::getProgramOptions() {
-  return {{"Petrosian photometry options",
-            {
-              {
-                PETROSIAN_ETA, po::value<double>()->default_value(0.2),
-                "Fraction of the isophote over the surface brightness For the Petrosian radius"
-              },
-              {
-                PETROSIAN_FACTOR, po::value<double>()->default_value(2.0),
-                "Scale factor for Petrosian photometry"
-              },
-              {
-                PETROSIAN_MINRAD, po::value<double>()->default_value(3.5),
-                "Minimum radius for Petrosian photometry"
-              },
-              {
-                PETROSIAN_CHECKIMAGE, po::value<std::string>(),
-                  "Check image for Petrosian apertures"
-              }
-            }
-          }};
+  return {
+    {
+      // Configuration group name
+      "Petrosian photometry options",
+      // List of supported parameters, with defaults
+      {
+        {
+          PETROSIAN_ETA, po::value<double>()->default_value(0.2),
+          "Fraction of the isophote over the surface brightness For the Petrosian radius"
+        },
+        {
+          PETROSIAN_FACTOR, po::value<double>()->default_value(2.0),
+          "Scale factor for Petrosian photometry"
+        },
+        {
+          PETROSIAN_MINRAD, po::value<double>()->default_value(3.5),
+          "Minimum radius for Petrosian photometry"
+        },
+        {
+          PETROSIAN_CHECKIMAGE, po::value<std::string>(),
+          "Check image for Petrosian apertures"
+        }
+      }
+    }
+  };
 }
 
 void PetrosianConfig::initialize(const UserValues& args) {
+  // The user values are passed as boost::program_options::variable_value
+  // We cast them to their expected type using .as<type>()
   m_eta = args.at(PETROSIAN_ETA).as<double>();
   m_factor = args.at(PETROSIAN_FACTOR).as<double>();
   m_minrad = args.at(PETROSIAN_MINRAD).as<double>();
+  // This parameter is optional and has no default
   if (args.count(PETROSIAN_CHECKIMAGE)) {
     m_checkimage = args.at(PETROSIAN_CHECKIMAGE).as<std::string>();
   }
@@ -79,7 +87,7 @@ double PetrosianConfig::getMinRadius() const {
   return m_minrad;
 }
 
-std::string PetrosianConfig::getCheckImagePath() const {
+boost::filesystem::path PetrosianConfig::getCheckImagePath() const {
   return m_checkimage;
 }
 

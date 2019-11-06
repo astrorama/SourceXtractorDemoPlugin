@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef _PLUGIN_PETROSIANPHOTOMETRY_PETROSIANPHOTOMETRY_H
-#define _PLUGIN_PETROSIANPHOTOMETRY_PETROSIANPHOTOMETRY_H
+#ifndef _PETROSIAN_PETROSIANPHOTOMETRY_PETROSIANPHOTOMETRY_H
+#define _PETROSIAN_PETROSIANPHOTOMETRY_PETROSIANPHOTOMETRY_H
 
 #include <SEFramework/Property/Property.h>
 #include <SEFramework/Source/SourceFlags.h>
@@ -32,14 +32,14 @@ namespace Petrosian {
 /**
  * @class PetrosianPhotometry
  * @brief
- *
+ *  This class holds the measured photometry for once source in one measurement frame
  */
 class PetrosianPhotometry: public SourceXtractor::Property {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianPhotometry() = default;
 

@@ -37,12 +37,24 @@ namespace Petrosian {
 
 std::shared_ptr<SourceXtractor::Task>
 PetrosianPhotometryTaskFactory::createTask(const SourceXtractor::PropertyId& property_id) const {
+
+  // ------------------------------------------------------------------------
+  // This task factory takes care of the creation of tasks for two different
+  // properties:
+  //  PetrosianPhotometry and PetrosianPhotometryArray
+  // We switch based on the getTypeId()
+  // ------------------------------------------------------------------------
+
+  // Photometry of a source on a single image
   if (property_id.getTypeId() == typeid(PetrosianPhotometry)) {
+    // Note we use getIndex() to identify the unique frame
+    // In effect, a property is a unique combination of type and measurement frame
     return std::make_shared<PetrosianPhotometryTask>(
       property_id.getIndex(), m_magnitude_zero_point, m_use_symmetry,
       m_checkimage
     );
   }
+  // Group photometries
   else if (property_id.getTypeId() == typeid(PetrosianPhotometryArray)) {
     return std::make_shared<PetrosianPhotometryArrayTask>(m_images);
   }
@@ -50,6 +62,8 @@ PetrosianPhotometryTaskFactory::createTask(const SourceXtractor::PropertyId& pro
 }
 
 void PetrosianPhotometryTaskFactory::reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const {
+  // This task uses also configuration classes that come from the main application:
+  // For instance, for the magnitude zeropoint, or to identify the set of unique measurement frames
   manager.registerConfiguration<PetrosianConfig>();
   manager.registerConfiguration<SourceXtractor::MagnitudeConfig>();
   manager.registerConfiguration<SourceXtractor::MeasurementImageConfig>();
@@ -57,6 +71,7 @@ void PetrosianPhotometryTaskFactory::reportConfigDependencies(Euclid::Configurat
 }
 
 void PetrosianPhotometryTaskFactory::configure(Euclid::Configuration::ConfigManager& manager) {
+  // We can rely on the configuration also from the main SourceXtractor code
   m_magnitude_zero_point = manager.getConfiguration<SourceXtractor::MagnitudeConfig>().getMagnitudeZeroPoint();
   m_use_symmetry = manager.getConfiguration<SourceXtractor::WeightImageConfig>().symmetryUsage();
   m_checkimage = manager.getConfiguration<PetrosianConfig>().getCheckImagePath();
@@ -65,13 +80,8 @@ void PetrosianPhotometryTaskFactory::configure(Euclid::Configuration::ConfigMana
   const auto& image_infos = measurement_config.getImageInfos();
 
   for (unsigned i = 0; i < image_infos.size(); ++i) {
-    m_petrosian_names.emplace_back(std::make_pair(std::to_string(i), image_infos[i].m_id));
     m_images.push_back(image_infos[i].m_id);
   }
-}
-
-void PetrosianPhotometryTaskFactory::registerPropertyInstances(SourceXtractor::OutputRegistry& registry) {
-  registry.registerPropertyInstances<PetrosianPhotometry>(m_petrosian_names);
 }
 
 }  // namespace Petrosian

@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef _PLUGIN_PETROSIANRADIUS_PETROSIANRADIUS_H
-#define _PLUGIN_PETROSIANRADIUS_PETROSIANRADIUS_H
+#ifndef _PETROSIAN_PETROSIANRADIUS_PETROSIANRADIUS_H
+#define _PETROSIAN_PETROSIANRADIUS_PETROSIANRADIUS_H
 
 #include <SEFramework/Property/Property.h>
 
@@ -31,7 +31,8 @@ namespace Petrosian {
 /**
  * @class AvgAperture
  * @brief
- *
+ *  This property holds the computed Petrosian radius.
+ *  Note that is *must* inherit from SourceXtractor::Property
  */
 class PetrosianRadius : public SourceXtractor::Property {
 

@@ -21,31 +21,52 @@
  *
  */
 
-#ifndef _PLUGIN_PETROSIANRADIUS_PETROSIANRADIUSTASKFACTORY_H
-#define _PLUGIN_PETROSIANRADIUS_PETROSIANRADIUSTASKFACTORY_H
+#ifndef _PETROSIAN_PETROSIANRADIUS_PETROSIANRADIUSTASKFACTORY_H
+#define _PETROSIAN_PETROSIANRADIUS_PETROSIANRADIUSTASKFACTORY_H
 
 #include <SEFramework/Task/TaskFactory.h>
 
 namespace Petrosian {
 
 /**
- * @class AvgApertureTaskFactory
+ * @class PetrosianRadiusTaskFactory
  * @brief
- *
+ *  This class instantiates the particular task, or tasks, that computes a given property
  */
 class PetrosianRadiusTaskFactory: public SourceXtractor::TaskFactory {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianRadiusTaskFactory() = default;
 
+  /**
+   * @brief
+   *    Create the task associated to the given property, if known, and if it can be done.
+   *    Otherwise, return nullptr
+   * @param property_id
+   *    The type id of the requested property
+   * @return
+   *    A Task that computes the property
+   */
   std::shared_ptr<SourceXtractor::Task> createTask(const SourceXtractor::PropertyId& property_id) const override;
 
+  /**
+   * @brief
+   *    Tell the configuration manager which Configuration classes are required by this factory.
+   *    Note that they do not have to be exclusively configuration classes from this library only
+   * @param manager
+   */
   void reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const override;
 
+  /**
+   * @brief
+   *    Configure the task factory. Called once the configuration manager has fully initialized the Configuration
+   *    classes.
+   * @param manager
+   */
   void configure(Euclid::Configuration::ConfigManager& manager) override;
 
 private:

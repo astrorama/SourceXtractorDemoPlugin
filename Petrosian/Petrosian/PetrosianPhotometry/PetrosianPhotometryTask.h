@@ -25,32 +25,60 @@
 #define _PLUGIN_PETROSIANPHOTOMETRY_PETROSIANPHOTOMETRYTASK_H
 
 #include <SEFramework/Task/SourceTask.h>
+#include <boost/filesystem/path.hpp>
 
 namespace Petrosian {
 
 /**
  * @class PetrosianPhotometryTask
  * @brief
- *
+ *  This class measures the photometry of a source on a given frame.
+ * @details
+ *  It inherits from SourceXtractor::SourceTask because it is a per-source property.
+ *  For measurements that work on source groups - like the Model Fitting does -,
+ *  it would have to inherit from SourceXtractor::GroupTask
+ * @see
+ *  SourceXtractor::GroupTask
  */
 class PetrosianPhotometryTask : public SourceXtractor::SourceTask {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianPhotometryTask() = default;
 
-  PetrosianPhotometryTask(unsigned m_instance, double mag_zeropoint, bool use_symmetry, const std::string &checkimage);
+  /**
+   * Constructor
+   * @param m_instance
+   *    Since there is one property per source per image, this parameter identifies
+   *    the frame on which this task is working
+   * @param mag_zeropoint
+   *    Magnitude zeropoint
+   * @param use_symmetry
+   *    Use symmetric pixels to cover for bad/masked out pixels
+   * @param checkimage
+   *    Optional path for a check image, so we can generate an image with the apertures being used
+   */
+  PetrosianPhotometryTask(unsigned m_instance, double mag_zeropoint, bool use_symmetry,
+                          const boost::filesystem::path& checkimage);
 
+  /**
+   * @brief
+   *    Compute the corresponding property. Multiple properties could be computed at once.
+   * @param source
+   *    The source for which to compute the property. If this were an implementation of
+   *    SourceXtractor::GroupTask, it would receive an instance of
+   *    SourceXtractor::SourceGroupInterface instead
+   */
   void computeProperties(SourceXtractor::SourceInterface& source) const override;
 
 private:
   unsigned m_instance;
   double m_mag_zeropoint;
   bool m_use_symmetry;
-  std::string m_checkimage;
+  boost::filesystem::path m_checkimage;
 };  // End of PetrosianPhotometryTask class
 
 }  // namespace Petrosian

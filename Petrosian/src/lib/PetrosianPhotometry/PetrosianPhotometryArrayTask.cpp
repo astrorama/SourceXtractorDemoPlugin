@@ -32,6 +32,8 @@ PetrosianPhotometryArrayTask::PetrosianPhotometryArrayTask(const std::vector<uns
 }
 
 void PetrosianPhotometryArrayTask::computeProperties(SourceXtractor::SourceInterface& source) const {
+  // This task is fairly straight-forward: we just iterate over the set of measurement images,
+  // obtain the photometry on each one for this source, and group them
   std::vector<PetrosianPhotometry> photometries;
   for (auto img : m_images) {
     photometries.emplace_back(source.getProperty<PetrosianPhotometry>(img));
@@ -40,6 +42,3 @@ void PetrosianPhotometryArrayTask::computeProperties(SourceXtractor::SourceInter
 }
 
 }  // namespace Petrosian
-
-
-

@@ -31,6 +31,8 @@ namespace Petrosian {
 
 std::shared_ptr<SourceXtractor::Task>
 PetrosianRadiusTaskFactory::createTask(const SourceXtractor::PropertyId& property_id) const {
+  // This task factory only knows how to create a task that computes the PetrosianRadius
+  // Note that this function will normally be called if it is not for that property, but it is good to check
   if (property_id.getTypeId() == typeid(PetrosianRadius)) {
     return std::make_shared<PetrosianRadiusTask>(m_eta, m_factor, m_minrad);
   }
@@ -38,6 +40,7 @@ PetrosianRadiusTaskFactory::createTask(const SourceXtractor::PropertyId& propert
 }
 
 void PetrosianRadiusTaskFactory::reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const {
+  // This class only requires the PetrosianConfig configuration
   manager.registerConfiguration<PetrosianConfig>();
 }
 

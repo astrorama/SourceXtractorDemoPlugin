@@ -29,10 +29,13 @@ The repository is organized following the standard
 
 At the source level, we have split the functionality into two different
 properties: `PetrosianRadius`, and `PetrosianPhotometry`.
-There is no reason not to have both in one single property, but this
-organization helps understanding the code, and highlight how
-one property can be, at the same time, part of the output and part
-of the input of a different property.
+
+The former works on the detection image, while the later works on
+the measurement frame, of which we can have multiple. We recommend
+to have a detailed look at the way both are computed: generally,
+there is no much difference, except that for the measurement frame
+one needs to keep track of which frame the task is working on via
+an index.
 
 Shared between both, we have `PetrosianPlugin`, which takes care of
 registering the properties and their associated output columns; and

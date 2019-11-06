@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef _PLUGIN_PETROSIANPLUGIN_H
-#define _PLUGIN_PETROSIANPLUGIN_H
+#ifndef _PETROSIAN_PETROSIANPLUGIN_H
+#define _PETROSIAN_PETROSIANPLUGIN_H
 
 #include <SEFramework/Plugin/Plugin.h>
 #include <ElementsKernel/Logging.h>
@@ -30,16 +30,35 @@
 
 namespace Petrosian {
 
-extern Elements::Logging s_logger;
-
+/**
+ * @brief
+ *  Implementation of the Plugin interface for Petrosian photometry.
+ *  You can only have one plugin by shared library, but there is no limitation on how many properties
+ *  a plugin can register.
+ *
+ *  Note that this is a dependency inversion: the plugin depends on SourceXtractor, not the other way around
+ */
 class PetrosianPlugin : public SourceXtractor::Plugin {
 
 public:
 
+  /**
+   * Default destructor
+   */
   virtual ~PetrosianPlugin() = default;
 
+  /**
+   * @return
+   *    A string that identifies uniquely this plugin
+   */
   std::string getIdString() const override;
 
+  /**
+   * @brief
+   *    Called by SourceXtractor so the plugin can register the properties, columns, etc.
+   * @param plugin_api
+   *    Plugin system API
+   */
   void registerPlugin(SourceXtractor::PluginAPI& plugin_api) override;
 
 };  // End of PetrosianPlugin class

@@ -31,31 +31,50 @@ namespace Petrosian {
 /**
  * @class PetrosianPhotometryTaskFactory
  * @brief
- *
+ *  This class handles the creation of tasks both for simple PetrosianPhotometry,
+ *  and PetrosianPhotometryArray
  */
 class PetrosianPhotometryTaskFactory : public SourceXtractor::TaskFactory {
 
 public:
 
   /**
-   * @brief Destructor
+   * Default destructor
    */
   virtual ~PetrosianPhotometryTaskFactory() = default;
 
+  /**
+   * @brief
+   *    Create the task associated to the given property, if known, and if it can be done.
+   *    Otherwise, return nullptr
+   * @param property_id
+   *    The type id of the requested property
+   * @return
+   *    A Task that computes the property
+   */
   std::shared_ptr<SourceXtractor::Task> createTask(const SourceXtractor::PropertyId& property_id) const override;
 
+  /**
+   * @brief
+   *    Tell the configuration manager which Configuration classes are required by this factory.
+   *    Note that they do not have to be exclusively configuration classes from this library only
+   * @param manager
+   */
   void reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const override;
 
+  /**
+   * @brief
+   *    Configure the task factory. Called once the configuration manager has fully initialized the Configuration
+   *    classes.
+   * @param manager
+   */
   void configure(Euclid::Configuration::ConfigManager& manager) override;
-
-  void registerPropertyInstances(SourceXtractor::OutputRegistry& registry) override;
 
 private:
   double m_magnitude_zero_point;
   bool m_use_symmetry;
-  std::string m_checkimage;
+  boost::filesystem::path m_checkimage;
 
-  std::vector<std::pair<std::string, unsigned>> m_petrosian_names;
   std::vector<unsigned> m_images;
 
 };  // End of PetrosianPhotometryTaskFactory class
