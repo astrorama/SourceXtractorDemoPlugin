@@ -1,5 +1,7 @@
 # SourceXtractor++ Demo Plugin
 
+[![Build Status](https://travis-ci.org/astrorama/SourceXtractorDemoPlugin.svg?branch=master)](https://travis-ci.org/astrorama/SourceXtractorDemoPlugin)
+
 [SourceXtractor++](https://github.com/astrorama/sourcextractorplusplus)
 supports externally built plugins, loading them at run-time.
 
