@@ -12,4 +12,4 @@ find_package(ElementsProject)
 #                         elements_project(MyProject 1.0 USE Element 3.9)
 #===============================================================================
 
-elements_project(SourceXtractor-Demo-Plugin 0.1 USE Elements 5.8 SourceXtractorPlusPlus 0.6.1)
+elements_project(SourceXtractorDemoPlugin 0.1 USE Elements 5.8 SourceXtractorPlusPlus 0.6.1)
