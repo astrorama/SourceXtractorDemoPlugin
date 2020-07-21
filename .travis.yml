@@ -22,7 +22,7 @@ jobs:
   include:
   - &build
     stage: build
-    env: OS_TYPE=fedora OS_VERSION=30
+    env: OS_TYPE=fedora OS_VERSION=31
     script:
       - docker run --name builder --volume "$(pwd):/src" "${OS_TYPE}:${OS_VERSION}" bash "/src/.travis/build-rpm.sh"
       - docker cp "builder:/build/Packages/RPM/RPMS/x86_64" "./packages"
@@ -43,8 +43,6 @@ jobs:
           curl -T "${p}" "-u${BINTRAY_USER}:${BINTRAY_TOKEN}" "${BINTRAY_REPO}/${target_repo}/${OS_TYPE}/${OS_VERSION}/${OS_ARCH}/rpms/${p};bt_package=${package};bt_version=${version}?override=1&publish=1"
         done;
       fi
-  - <<: *build
-    env: OS_TYPE=fedora OS_VERSION=31
   - <<: *build
     env: OS_TYPE=fedora OS_VERSION=32
 
